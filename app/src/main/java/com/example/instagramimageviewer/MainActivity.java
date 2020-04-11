@@ -13,8 +13,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.jsoup.Connection;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.parser.Parser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,10 +68,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String before, imageurl;
         String imageText;
         Bitmap bitmap;
+        Document document;
+
+        private  Document connect(String url) throws org.jsoup.HttpStatusException{
+            Document doc = null;
+            try {
+                if(Jsoup.connect(url).response().statusCode() == 404) {doc = null;}
+                else {doc = Jsoup.connect(url).get();}
+            } catch (NullPointerException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                doc = null;
+
+            } catch (org.jsoup.HttpStatusException e) {
+                e.printStackTrace();
+                doc = null;
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                doc = null;
+
+            }
+            catch(Exception e){e.printStackTrace();
+                doc = null;}
+
+            return doc;
+        }
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setTitle("Searching for Account");
+            progressDialog.setMessage("Loading...");
+            progressDialog.setCancelable(false);
             progressDialog.show();
         }
 
@@ -76,28 +108,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         protected Void doInBackground(Void... voids) {
             try {
 
-                //Connect to the website
-                Document document = Jsoup.connect(url).post();
-                String result = document.toString();
-
-                System.out.println("result : "+result);
-
-                int indexS = result.indexOf("profile_pic_url_hd");
-                int indexE = result.indexOf("requested_by_viewer");
-
-                imageText = result.substring(indexS,indexE);
-                imageText = imageText.replace("\\u0026", "&");
 
 
-                String[] resultSplit = imageText.split(":");
-                String s = resultSplit[1]+":"+resultSplit[2];
-                before = s.substring(1,s.length()-3);
+                Document document = connect(url);
+                System.out.println("Get document with post method : "+document);
 
-                imageurl = before;
-                System.out.println("imageurl : "+imageurl);
+                if(document == null)
+                {
+                    System.out.println("Sorry! Account not found");
+                    imageurl = "";
+                }
+
+                else
+                    {
+                        String result = document.toString();
+
+                        System.out.println("result : "+result);
+
+                        int indexS = result.indexOf("profile_pic_url_hd");
+                        int indexE = result.indexOf("requested_by_viewer");
+
+                        imageText = result.substring(indexS,indexE);
+                        imageText = imageText.replace("\\u0026", "&");
 
 
-            } catch (IOException e) {
+                        String[] resultSplit = imageText.split(":");
+                        String s = resultSplit[1]+":"+resultSplit[2];
+                        before = s.substring(1,s.length()-3);
+
+                        imageurl = before;
+                        System.out.println("imageurl : "+imageurl);
+                    }
+
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
@@ -106,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+
             if(imageurl.equals(""))
             {
                 progressDialog.dismiss();

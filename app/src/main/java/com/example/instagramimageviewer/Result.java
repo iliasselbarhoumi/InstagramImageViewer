@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -35,7 +36,7 @@ public class Result extends AppCompatActivity implements View.OnClickListener {
     ImageView Image;
     Bitmap bitmap;
     String url, username;
-
+    TextView UsernameMessage;
     Button Save;
     Button Back;
 
@@ -47,6 +48,7 @@ public class Result extends AppCompatActivity implements View.OnClickListener {
         Image = findViewById(R.id.Image);
         Save = findViewById(R.id.Save);
         Back = findViewById(R.id.Back);
+        UsernameMessage = findViewById(R.id.username_message);
 
         Save.setOnClickListener(this);
         Back.setOnClickListener(this);
@@ -55,6 +57,7 @@ public class Result extends AppCompatActivity implements View.OnClickListener {
 
         url = i.getStringExtra("url");
         username = i.getStringExtra("username");
+        UsernameMessage.setText(username+"'s image");
 
         Picasso.with(getApplicationContext()).load(url).into(Image);
 

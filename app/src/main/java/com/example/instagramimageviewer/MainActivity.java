@@ -41,9 +41,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         GetImage = findViewById(R.id.getImage);
         GetImage.setOnClickListener(this);
 
-
-
-
     }
 
     @Override

@@ -1,9 +1,13 @@
 package com.example.instagramimageviewer;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -33,6 +37,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String username;
     String Entry;
 
+    static final Integer WRITE_EXST = 0x3;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +49,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         GetImage = findViewById(R.id.getImage);
         GetImage.setOnClickListener(this);
 
+        askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,WRITE_EXST);
+
+
+
+
+    }
+
+    private void askForPermission(String permission, Integer requestCode) {
+        if (ContextCompat.checkSelfPermission(MainActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, permission)) {
+
+                //This is called if user has denied the permission before
+                //In this case I am just asking the permission again
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, requestCode);
+
+            } else {
+
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, requestCode);
+            }
+        } else {
+            Toast.makeText(this, "" + permission + " is already granted.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -62,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         System.out.println("url : "+url);
                         username = resultSplit[0].substring(26,resultSplit[0].length());
                         System.out.println("username : "+username);
-                        Toast.makeText(this, ""+url, Toast.LENGTH_SHORT).show();
                         new Content().execute();
                     }
 
@@ -71,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             url = Entry;
                             username = Entry.substring(26,Entry.length());
                             System.out.println(username);
-                            Toast.makeText(this, ""+url, Toast.LENGTH_SHORT).show();
                             new Content().execute();
                         }
 
@@ -86,7 +115,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         System.out.println("url : "+url);
                         username = resultSplit[0].substring(22,resultSplit[0].length());
                         System.out.println("username : "+username);
-                        Toast.makeText(this, ""+url, Toast.LENGTH_SHORT).show();
                         new Content().execute();
                     }
 
@@ -95,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         url = Entry;
                         username = Entry.substring(22,Entry.length());
                         System.out.println(username);
-                        Toast.makeText(this, ""+url, Toast.LENGTH_SHORT).show();
                         new Content().execute();
                     }
 
@@ -105,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     {
                         url+= Entry;
                         username = Entry;
-                        Toast.makeText(this, ""+url, Toast.LENGTH_SHORT).show();
                         new Content().execute();
                     }
 

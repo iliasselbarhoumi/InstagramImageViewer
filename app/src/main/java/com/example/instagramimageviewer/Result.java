@@ -1,11 +1,15 @@
 package com.example.instagramimageviewer;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -39,11 +43,13 @@ public class Result extends AppCompatActivity implements View.OnClickListener {
     TextView UsernameMessage;
     Button Save;
     Button Back;
+    static final Integer WRITE_EXST = 0x3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+
 
         Image = findViewById(R.id.Image);
         Save = findViewById(R.id.Save);
@@ -64,12 +70,36 @@ public class Result extends AppCompatActivity implements View.OnClickListener {
 
     }
 
+    private void askForPermission(String permission, Integer requestCode) {
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+
+                //This is called if user has denied the permission before
+                //In this case I am just asking the permission again
+                ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+
+            } else {
+
+                ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+            }
+        } else {
+            System.out.println("" + permission + " is already granted.");
+        }
+    }
+
     @Override
     public void onClick(View v) {
 
         if(v.getId()==R.id.Save)
         {
-           new storeImage().execute();
+            boolean check = false;
+            askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,WRITE_EXST);
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+            {
+                new storeImage().execute();
+            }
         }
 
         if(v.getId()==R.id.Back)

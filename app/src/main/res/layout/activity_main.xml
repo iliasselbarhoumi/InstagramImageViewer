@@ -38,13 +38,13 @@
 
     <EditText
         android:id="@+id/username"
-        android:layout_width="256dp"
-        android:layout_height="50dp"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
         android:layout_marginTop="30dp"
         android:background="@drawable/blue_button2"
         android:ellipsize="start"
         android:gravity="center"
-        android:hint="Username"
+        android:hint="Username or Url"
         android:inputType="textPersonName"
         android:text=""
         app:layout_constraintEnd_toEndOf="parent"

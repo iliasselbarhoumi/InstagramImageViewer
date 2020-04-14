@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     String url = "https://www.instagram.com/";
     String username;
+    String Entry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +51,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             if(!Username.getText().equals(""))
             {
-                url+= Username.getText().toString();
-                username = Username.getText().toString();
-                Toast.makeText(this, ""+url, Toast.LENGTH_SHORT).show();
-                new Content().execute();
+                Entry = Username.getText().toString();
+
+                if(Entry.contains("https://www.instagram.com/"))
+                {
+                    if(Entry.contains("?igshid"))
+                    {
+                        String[] resultSplit = Entry.split("\\?");
+                        url = resultSplit[0];
+                        username = resultSplit[0].substring(26,resultSplit[0].length());
+                        System.out.println(username);
+                        Toast.makeText(this, ""+url, Toast.LENGTH_SHORT).show();
+                        new Content().execute();
+                    }
+
+                    else
+                        {
+                            url = Entry;
+                            username = Entry.substring(26,Entry.length());
+                            System.out.println(username);
+                            Toast.makeText(this, ""+url, Toast.LENGTH_SHORT).show();
+                            new Content().execute();
+                        }
+
+                }
+                else
+                    {
+                        url+= Entry;
+                        username = Entry;
+                        Toast.makeText(this, ""+url, Toast.LENGTH_SHORT).show();
+                        new Content().execute();
+                    }
+
 
             }
         }
@@ -64,8 +93,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         String before, imageurl;
         String imageText;
-        Bitmap bitmap;
-        Document document;
 
         private  Document connect(String url) throws org.jsoup.HttpStatusException{
             Document doc = null;

@@ -12,7 +12,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="364dp"
+        android:layout_marginTop="420dp"
         android:fontFamily="@font/poppins"
         android:text="Search for Instagram profiles images"
         android:textSize="18dp"

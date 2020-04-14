@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ProgressDialog progressDialog;
     Button GetImage;
     EditText Username;
-
+    final String urlInsta = "https://www.instagram.com/";
     String url = "https://www.instagram.com/";
     String username;
     String Entry;
@@ -59,8 +59,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     {
                         String[] resultSplit = Entry.split("\\?");
                         url = resultSplit[0];
+                        System.out.println("url : "+url);
                         username = resultSplit[0].substring(26,resultSplit[0].length());
-                        System.out.println(username);
+                        System.out.println("username : "+username);
                         Toast.makeText(this, ""+url, Toast.LENGTH_SHORT).show();
                         new Content().execute();
                     }
@@ -75,6 +76,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
 
                 }
+
+                if(Entry.contains("https://instagram.com/"))
+                {
+                    if(Entry.contains("?igshid"))
+                    {
+                        String[] resultSplit = Entry.split("\\?");
+                        url = resultSplit[0];
+                        System.out.println("url : "+url);
+                        username = resultSplit[0].substring(22,resultSplit[0].length());
+                        System.out.println("username : "+username);
+                        Toast.makeText(this, ""+url, Toast.LENGTH_SHORT).show();
+                        new Content().execute();
+                    }
+
+                    else
+                    {
+                        url = Entry;
+                        username = Entry.substring(22,Entry.length());
+                        System.out.println(username);
+                        Toast.makeText(this, ""+url, Toast.LENGTH_SHORT).show();
+                        new Content().execute();
+                    }
+
+                }
+
                 else
                     {
                         url+= Entry;
@@ -141,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 {
                     System.out.println("Sorry! Account not found");
                     imageurl = "";
+                    url = urlInsta;
                 }
 
                 else

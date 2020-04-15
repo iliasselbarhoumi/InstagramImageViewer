@@ -24,7 +24,7 @@ The User has the possibility to store the image in his phone, and see it in his 
 
 ## ScreenShots
 This is how looks the main activity, where you can add the user's username or url
-![alt text](https://raw.githubusercontent.com/iliasselbarhoumi/InstagramImageViewer/master/MainActivity.png)
+![alt text](MainActivity.png)
 
 
 ## Used Technologie / Language

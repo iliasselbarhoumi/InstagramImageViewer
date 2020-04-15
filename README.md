@@ -27,7 +27,8 @@ This is how looks the main activity, where you can add the user's username or ur
 ![alt text](MainActivity.png)
 
 
-This is the result after that I entered my Instagram account's username
+
+This is the result after that I entered my Instagram account's username :smile:
 ![alt text](ResultActivity.png)
 
 

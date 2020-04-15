@@ -1,15 +1,12 @@
 package com.example.instagramimageviewer;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -17,19 +14,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.jsoup.Connection;
-import org.jsoup.HttpStatusException;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.parser.Parser;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     ProgressDialog progressDialog;
+    AlertDialog.Builder alertDialog;
     Button GetImage;
     EditText Username;
     final String urlInsta = "https://www.instagram.com/";
@@ -39,17 +38,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     static final Integer WRITE_EXST = 0x3;
 
+    ConnectivityManager conMan;
+    NetworkInfo.State Etatmobile;
+    NetworkInfo.State Etatwifi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         Username = findViewById(R.id.username);
         GetImage = findViewById(R.id.getImage);
         GetImage.setOnClickListener(this);
 
+
+        conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        Etatmobile = conMan.getNetworkInfo(0).getState();
+        Etatwifi = conMan.getNetworkInfo(1).getState();
+
         askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,WRITE_EXST);
+        askForPermission(Manifest.permission.ACCESS_WIFI_STATE,WRITE_EXST);
+
+        alertDialog = new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("The application need to be connected to Internet")
+                .setMessage("Please check your WiFi/Mobile Data connection");
 
 
 
@@ -71,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, requestCode);
             }
         } else {
-            Toast.makeText(this, "" + permission + " is already granted.", Toast.LENGTH_SHORT).show();
+            System.out.println("" + permission + " is already granted.");
         }
     }
 
@@ -80,60 +95,78 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(v.getId()== R.id.getImage )
         {
+            Etatmobile = conMan.getNetworkInfo(0).getState();
+            Etatwifi = conMan.getNetworkInfo(1).getState();
+
             if(!Username.getText().equals(""))
             {
+
                 Entry = Username.getText().toString();
 
-                if(Entry.contains("https://www.instagram.com/"))
-                {
-                    if(Entry.contains("?igshid"))
-                    {
-                        String[] resultSplit = Entry.split("\\?");
-                        url = resultSplit[0];
-                        System.out.println("url : "+url);
-                        username = resultSplit[0].substring(26,resultSplit[0].length());
-                        System.out.println("username : "+username);
-                        new Content().execute();
-                    }
 
-                    else
+                // Wifi or Mobile data are disabled
+                if( (Etatwifi == NetworkInfo.State.CONNECTED || Etatwifi == NetworkInfo.State.CONNECTING) || (Etatmobile == NetworkInfo.State.CONNECTED || Etatmobile == NetworkInfo.State.CONNECTING))
+                {
+                    if(Entry.contains("https://www.instagram.com/"))
+                    {
+                        if(Entry.contains("?igshid"))
                         {
-                            url = Entry;
-                            username = Entry.substring(26,Entry.length());
-                            System.out.println(username);
-                            new Content().execute();
+                            String[] resultSplit = Entry.split("\\?");
+                            url = resultSplit[0];
+                            System.out.println("url : "+url);
+                            username = resultSplit[0].substring(26);
+                            System.out.println("username : "+username);
+                            new GetInstaImage().execute();
                         }
 
-                }
+                        else
+                        {
+                            url = Entry;
+                            username = Entry.substring(26);
+                            System.out.println(username);
+                            new GetInstaImage().execute();
+                        }
 
-                if(Entry.contains("https://instagram.com/"))
-                {
-                    if(Entry.contains("?igshid"))
+                    }
+
+                    if(Entry.contains("https://instagram.com/"))
                     {
-                        String[] resultSplit = Entry.split("\\?");
-                        url = resultSplit[0];
-                        System.out.println("url : "+url);
-                        username = resultSplit[0].substring(22,resultSplit[0].length());
-                        System.out.println("username : "+username);
-                        new Content().execute();
+                        if(Entry.contains("?igshid"))
+                        {
+                            String[] resultSplit = Entry.split("\\?");
+                            url = resultSplit[0];
+                            System.out.println("url : "+url);
+                            username = resultSplit[0].substring(22);
+                            System.out.println("username : "+username);
+                            new GetInstaImage().execute();
+                        }
+
+                        else
+                        {
+                            url = Entry;
+                            username = Entry.substring(22);
+                            System.out.println(username);
+                            new GetInstaImage().execute();
+                        }
+
                     }
 
                     else
-                    {
-                        url = Entry;
-                        username = Entry.substring(22,Entry.length());
-                        System.out.println(username);
-                        new Content().execute();
-                    }
-
-                }
-
-                else
                     {
                         url+= Entry;
                         username = Entry;
-                        new Content().execute();
+                        new GetInstaImage().execute();
                     }
+
+                }
+
+                // Wifi or Mobile data are disabled
+                else{
+                    System.out.println("show dialog");
+                    alertDialog.show();
+                    Etatmobile = conMan.getNetworkInfo(0).getState();
+                    Etatwifi = conMan.getNetworkInfo(1).getState();
+                }
 
 
             }
@@ -141,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private class Content extends AsyncTask<Void, Void, Void> {
+    private class GetInstaImage extends AsyncTask<Void, Void, Void> {
 
         String before, imageurl;
         String imageText;

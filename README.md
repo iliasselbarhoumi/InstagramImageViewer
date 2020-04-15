@@ -27,11 +27,15 @@ This is how looks the main activity, where you can add the user's username or ur
 ![alt text](MainActivity.png)
 
 
-## Used Technologie / Language
+This is the result after that I entered my Instagram account's username
+![alt text](ResultActivity.png)
+
+
+## Used Technology / Language
 Android / Java
 
 ## Used Libraries
 The libraries used for the execution of this application:
-Jsoup : data analysis and HTML data extraction library for Java
-Picasso : image loading/processing library to display the picture.
+* Jsoup : data analysis and HTML data extraction library for Java
+* Picasso : image loading/processing library to display the picture.
 

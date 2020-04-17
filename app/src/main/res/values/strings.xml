@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Insta Image Viewer</string>
+    <string name="main_textview">Search for Instagram profiles images</string>
+    <string name="secondary_textview">Copy the link of the user that you want to search to get his profile\'s picture</string>
+    <string name="hint_text">Username or Url</string>
+    <string name="button_text">Get Profile\'s Image</string>
+
 </resources>

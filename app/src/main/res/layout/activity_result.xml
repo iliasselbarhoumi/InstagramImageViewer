@@ -6,13 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".Result">
 
-
-
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/search_result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="30dp"
         android:text="Search Result"
         android:textSize="20dp"
         android:textStyle="bold"
@@ -32,16 +30,15 @@
         android:text=""
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/search_result" />
 
 
     <ImageView
         android:id="@+id/Image"
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_marginTop="15dp"
-        android:background="@color/black"
-        android:padding="1px"
+        android:src="@drawable/ic_photo_black_24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +53,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Image">
-
 
         <Button
             android:id="@+id/Back"
@@ -80,10 +76,6 @@
             tools:layout_editor_absoluteX="238dp"
             tools:layout_editor_absoluteY="610dp" />
 
-
     </LinearLayout>
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

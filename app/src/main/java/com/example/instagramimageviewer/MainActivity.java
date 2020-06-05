@@ -33,7 +33,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText Username;
 
     //******* Variables
-    final String urlInsta = "https://www.instagram.com/";
+    final String urlInsta1 = "https://www.instagram.com/";
+    final String urlInsta2 = "https://instagram.com/";
     String url = "https://www.instagram.com/";
     String username;
     String Entry;
@@ -76,9 +77,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
-
-
     @Override
     public void onClick(View v) {
 
@@ -98,70 +96,102 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 if( (Etatwifi == NetworkInfo.State.CONNECTED || Etatwifi == NetworkInfo.State.CONNECTING) || (Etatmobile == NetworkInfo.State.CONNECTED || Etatmobile == NetworkInfo.State.CONNECTING))
                 {
-                    //********* We test if the text entered is a link contains (https://www.instagram.com/)
-                    //********* We got this types of links when the user copy the url from the browser
-                    if(Entry.contains("https://www.instagram.com/"))
+
+                    if(!Entry.contains(urlInsta1) && !Entry.contains(urlInsta2))
                     {
-                        //********* we try to get the username from the link
+                        System.out.println("The Entry is the username : "+ Entry);
+                        System.out.println("url : "+url);
+                        System.out.println("username : "+username);
+                        System.out.println("***************************************************************************************\n");
 
-                        if(Entry.contains("?igshid"))
-                        {
-                            String[] resultSplit = Entry.split("\\?");
-                            url = resultSplit[0];
-                            System.out.println("url : "+url);
-                            username = resultSplit[0].substring(26);
-                            System.out.println("username : "+username);
-                            new GetInstaImage().execute();
-                        }
-
-                        else
-                        {
-                            url = Entry;
-                            username = Entry.substring(26);
-                            System.out.println(username);
-                            new GetInstaImage().execute();
-                        }
-
-                    }
-
-                    //********* We test if the text entered is a link contains (https://instagram.com/)
-                    //********* We got this types of links when the user copy the url from the Instagram application
-                    if(Entry.contains("https://instagram.com/"))
-                    {
-                        //********* we try to get the username from the link
-                        if(Entry.contains("?igshid"))
-                        {
-                            String[] resultSplit = Entry.split("\\?");
-                            url = resultSplit[0];
-                            System.out.println("url : "+url);
-                            username = resultSplit[0].substring(22);
-                            System.out.println("username : "+username);
-                            new GetInstaImage().execute();
-                        }
-
-                        else
-                        {
-                            url = Entry;
-                            username = Entry.substring(22);
-                            System.out.println(username);
-                            new GetInstaImage().execute();
-                        }
-
-                    }
-
-                    //********* when the user enter the username, this is the fastest and easyest way
-                    //********* we compose the url after that we got the username
-                    else
-                    {
-                        url+= Entry;
+                        url = urlInsta1+Entry;
                         username = Entry;
+
+                        System.out.println("url : "+url);
+                        System.out.println("username : "+username);
+                        System.out.println("***************************************************************************************");
                         new GetInstaImage().execute();
                     }
+                    else
+                        {
+                            //********* We test if the text entered is a link contains (https://www.instagram.com/)
+                            //********* We got this types of links when the user copy the url from the browser
+                            if(Entry.contains(urlInsta1))
+                            {
+
+                                //********* we try to get the username from the link
+
+                                if(Entry.contains("?igshid"))
+                                {
+                                    String urlProcess = Entry;
+
+                                    System.out.println("The Entry contains https://www.instagram.com/, and contain ?igshid ");
+
+                                    String[] resultSplit = urlProcess.split("\\?");
+                                    url = resultSplit[0];
+                                    username = resultSplit[0].substring(26);
+                                    System.out.println("url : "+url);
+                                    System.out.println("username : "+username);
+                                    System.out.println("***************************************************************************************");
+                                    new GetInstaImage().execute();
+                                }
+
+                                else
+                                {
+                                    String urlProcess = Entry;
+
+                                    System.out.println("The Entry contains https://www.instagram.com/, and doesn't contain ?igshid ");
+                                    url = urlProcess;
+                                    username = urlProcess.substring(26);
+                                    System.out.println("url : "+url);
+                                    System.out.println("username : "+username);
+                                    System.out.println("***************************************************************************************");
+                                    new GetInstaImage().execute();
+                                }
+
+                            }
+
+                            //********* We test if the text entered is a link contains (https://instagram.com/)
+                            //********* We got this types of links when the user copy the url from the Instagram application
+                            if(Entry.contains(urlInsta2))
+                            {
+                                //********* we try to get the username from the link
+                                if(Entry.contains("?igshid"))
+                                {
+                                    String urlProcess = Entry;
+                                    System.out.println("The Entry contains https://instagram.com/, and contain ?igshid ");
+
+                                    String[] resultSplit = urlProcess.split("\\?");
+                                    url = resultSplit[0];
+                                    username = resultSplit[0].substring(22);
+                                    System.out.println("url : "+url);
+                                    System.out.println("username : "+username);
+                                    System.out.println("***************************************************************************************");
+                                    new GetInstaImage().execute();
+                                }
+
+                                else
+                                {
+                                    String urlProcess = Entry;
+                                    System.out.println("The Entry contains https://instagram.com/, and doesn't contain ?igshid ");
+
+                                    url = urlProcess;
+                                    username = urlProcess.substring(22);
+                                    System.out.println("url : "+url);
+                                    System.out.println("username : "+username);
+                                    System.out.println("***************************************************************************************");
+                                    new GetInstaImage().execute();
+                                }
+
+                            }
+                        }
+
 
                 }
 
                 //********* when Wifi or Mobile data are disabled, we show the AlertDialog
-                else{
+                else
+                    {
                     alertDialog.show();
                     Etatmobile = conMan.getNetworkInfo(0).getState();
                     Etatwifi = conMan.getNetworkInfo(1).getState();
@@ -179,17 +209,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void askForPermission(String permission, Integer requestCode) {
         if (ContextCompat.checkSelfPermission(MainActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
 
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, permission)) {
+                // Should we show an explanation?
+                if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, permission)) {
 
-                //This is called if user has denied the permission before
-                //In this case I am just asking the permission again
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, requestCode);
+                    //This is called if user has denied the permission before
+                    //In this case I am just asking the permission again
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, requestCode);
 
-            } else {
-
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, requestCode);
-            }
+                }
+                else
+                    {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, requestCode);
+                }
         } else {
             System.out.println("" + permission + " is already granted.");
         }
@@ -240,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         protected Void doInBackground(Void... voids) {
             try {
                 //******* get the response of the request
+                System.out.println("url to get image : "+ url);
                 Document document = connect(url);
                 System.out.println("Get document with post method : "+document);
 
@@ -248,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 {
                     System.out.println("Sorry! Account not found");
                     imageurl = "";
-                    url = urlInsta;
+                    url = urlInsta1;
                 }
 
                 //******* is the response isn't null, we analyse the response to get the image url
@@ -265,10 +297,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         //************* we get the url
                         imageText = result.substring(indexS,indexE);
-
+                        System.out.println("imageText : "+imageText);
                         //************* we replace '\u0026' by its real character '&'
                         imageText = imageText.replace("\\u0026", "&");
 
+                        System.out.println("imageText : "+imageText);
                         //************* these instruction is just to make the link clean (delete any additional characters in the limits of the url)
                         //************* You can print in the log to well understand how thinhs work
                         String[] resultSplit = imageText.split(":");
@@ -278,6 +311,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //************* Finally, we get the image url
                         imageurl = before;
                         System.out.println("imageurl : "+imageurl);
+                        System.out.println("username : "+username);
                     }
 
 
